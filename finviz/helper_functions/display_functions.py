@@ -7,6 +7,6 @@ def create_table_string(table_list):
 
     table_string = ""
     for item in table_list:
-        table_string += format_str.format(*item) + "\n"
+        table_string += "| " + format_str.format(*item) + " |\n"
 
     return table_string

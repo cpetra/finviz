@@ -113,6 +113,11 @@ def get_news(ticker):
     date = None
     for row in rows:
         raw_timestamp = row.xpath("./td")[0].xpath("text()")[0][0:-2]
+        raw_timestamp = raw_timestamp.strip()
+        if "today" in raw_timestamp.lower():
+            time_part = raw_timestamp.split(' ')[1]
+            today_date_str = datetime.now().strftime('%b-%d-%y')
+            raw_timestamp = f"{today_date_str} {time_part}"
 
         if len(raw_timestamp) > 8:
             parsed_timestamp = datetime.strptime(raw_timestamp, "%b-%d-%y %I:%M%p")
