@@ -33,17 +33,19 @@ def get_stock(ticker):
     page_parsed = STOCK_PAGE[ticker]
 
 
-    title = page_parsed.cssselect('div[class="quote-links"]')[0]
-    keys = ["Sector", "Industry", "Country"]
-    fields = [f.text_content() for f in title.cssselect('a[class="tab-link"]')]
-    data = dict(zip(keys, fields))
-
-    data["Ticker"] = page_parsed.cssselect('h1[class="quote-header_ticker-wrapper_ticker"]')[0].text_content().strip()
-    data["Company"] = page_parsed.cssselect('h2[class="quote-header_ticker-wrapper_company"]')[0].cssselect('a[class="tab-link block truncate"]')[0].text_content().strip()
-
-
-    company_link = page_parsed.cssselect('h2[class="quote-header_ticker-wrapper_company"]')[0].cssselect('a[class="tab-link block truncate"]')[0].attrib["href"]
+    title = page_parsed.cssselect('div[class="fv-container py-2.5"]')[0]
+    data = {}
+    data["Ticker"] = title.cssselect('h1[class="js-recent-quote-ticker quote-header_ticker-wrapper_ticker"]')[0].text_content().strip()
+    try:
+        company_details = title.cssselect('h2[class="quote-header_ticker-wrapper_company text-xl"]')[0]
+    except IndexError:
+        company_details = title.cssselect('h2[class="quote-header_ticker-wrapper_company"]')[0]
+    data["Company"] = company_details.text_content().strip()
+    company_link = company_details.cssselect('a[class="tab-link block truncate"]')[0].attrib["href"]
     data["Website"] = company_link if company_link.startswith("http") else None
+    keys = ["Sector", "Industry", "Country", "Exchange"]
+    fields = [f.text_content() for f in title.cssselect('a[class="tab-link"]')]
+    data.update(dict(zip(keys, fields)))
 
     all_rows = [
         row.xpath("td//text()")
