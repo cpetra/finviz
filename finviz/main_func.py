@@ -28,10 +28,8 @@ def get_stock(ticker):
     :type ticker: str
     :return dict
     """
-
     get_page(ticker)
     page_parsed = STOCK_PAGE[ticker]
-
 
     title = page_parsed.cssselect('div[class="fv-container py-2.5"]')[0]
     data = {}
@@ -132,7 +130,7 @@ def get_news(ticker):
             parsed_timestamp.strftime("%Y-%m-%d %H:%M"),
             row.xpath("./td")[1].cssselect('a[class="tab-link-news"]')[0].xpath("text()")[0],
             row.xpath("./td")[1].cssselect('a[class="tab-link-news"]')[0].get("href"),
-            row.xpath("./td")[1].cssselect('div[class="news-link-right"] span')[0].xpath("text()")[0][1:]
+            row.xpath("./td")[1].cssselect('div[class="news-link-right flex gap-1 items-center"] span')[0].xpath("text()")[0][1:]
         ))
 
     return results
